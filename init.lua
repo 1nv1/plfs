@@ -60,7 +60,8 @@ end
 function plfs:new(getOS)
   local obj = {
     OS = "unknow",
-    pathsep = ""
+    pathsep = "",
+    getDirItems = {}
   }
   setmetatable(obj, self)
   self.__index = self
@@ -71,8 +72,14 @@ function plfs:new(getOS)
     obj.OS = getOS()
   end
 
-  if obj.OS == "Linux" then obj.pathsep = "/" end
-  if obj.OS == "Windows" then obj.pathsep = "\\" end
+  if obj.OS == "Linux" then
+    obj.pathsep = "/"
+    obj.getDirItems = _getDirItemLnx
+  end
+  if obj.OS == "Windows" then
+    obj.pathsep = "\\"
+    obj.getDirItems = _getDirItemWin
+  end
 
   return obj
 end
@@ -88,13 +95,7 @@ function plfs:adaptPath(path)
 end
 
 function plfs:getDirectoryItems(dir)
-  if self.OS == "Linux" then
-    return _getDirItemLnx(dir)
-  end
-  if self.OS == "Windows" then
-    return _getDirItemWin(dir)
-  end
-  return {}
+  return self.getDirItems(dir)
 end
 
 return plfs

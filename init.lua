@@ -18,8 +18,6 @@ end
 local function _getDirItemLnx(dir)
   local i, mode, popen = 0, {}, io.popen
   local t = {}
-  -- windows
-  -- for /f "delims=" %a in ('cd') do @for /f %b in ('dir /b /a-h /d') do @echo %a\%b
   local pfile = popen('ls -l -d -1 "'..dir..'"/*')
   for line in pfile:lines() do
     if line:sub(1,1) == "d" then
